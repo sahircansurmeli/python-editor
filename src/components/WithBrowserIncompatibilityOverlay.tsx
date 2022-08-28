@@ -25,7 +25,7 @@ const WithBrowserIncompatibilityOverlay: React.FunctionComponent = ({
     <div
       style={{
         position: "relative",
-        width: "inherit",
+        width: "100%",
       }}
     >
       {ieOrEdge && (

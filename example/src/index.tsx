@@ -1,5 +1,4 @@
 import React, { useState } from "../../node_modules/react"
-import { ProgrammingExercise as ProgrammingExerciseLoader } from "../.."
 import { ProgrammingExercise } from "../../src/components/ProgrammingExercise"
 import { Button, TextField, MenuItem, Grid } from "@material-ui/core"
 import { StylesProvider } from "@material-ui/styles"
