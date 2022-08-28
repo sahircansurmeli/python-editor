@@ -1,7 +1,7 @@
 {
-  "name": "moocfi-python-editor",
-  "version": "0.15.3",
-  "description": "",
+  "name": "react-python-editor",
+  "version": "1.0.0",
+  "description": "A Python editor and interpreter with interactive console",
   "main": "dist/src/index.js",
   "scripts": {
     "build": "rm -rf ./dist && npm run encode:worker && tsc",
@@ -16,11 +16,11 @@
     "watch": "tsc --watch"
   },
   "keywords": [],
-  "author": "",
+  "author": "Sahircan Sürmeli",
   "license": "Apache-2.0 OR MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rage/python-editor.git"
+    "url": "https://github.com/sahircansurmeli/python-editor.git"
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",
@@ -81,9 +81,9 @@
     "axios": "^0.21.0",
     "i18next": ">=20.2.0",
     "js-base64": "^3.6.0",
-    "luxon": "^1.26.0",
     "jszip": "^3.6.0",
     "jszip-utils": "^0.1.0",
+    "luxon": "^1.26.0",
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0",
     "react-i18next": ">=11.8.0",
@@ -99,5 +99,8 @@
     "*.{js,css,json,md,ts,tsx}": [
       "prettier --check"
     ]
+  },
+  "dependencies": {
+    "@material-ui/icons": "^4.11.3"
   }
 }

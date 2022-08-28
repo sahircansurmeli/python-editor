@@ -71,10 +71,6 @@ const EditorOutput: React.FunctionComponent<EditorOutputProps> = ({
         color={waitingInput ? OutputColor.Orange : OutputColor.Gray}
       >
         {getStatus()}
-        <Help
-          getPasteUrl={getPasteLink}
-          pasteDisabled={running || pasteDisabled}
-        />
         <OutputButton
           label={t("button.close")}
           onClick={onClose}

@@ -45,19 +45,7 @@ export const exampleFiles: ReadonlyArray<FileEntry> = [
   {
     fullName: "main.py",
     shortName: "main.py",
-    originalContent: defaultSrcContent,
-    content: defaultSrcContent,
-  },
-  {
-    fullName: "utils.py",
-    shortName: "utils.py",
-    originalContent: defaultUtilsContent,
-    content: defaultUtilsContent,
-  },
-  {
-    fullName: "test.py",
-    shortName: "test.py",
-    originalContent: defaultTestContent,
-    content: defaultTestContent,
+    originalContent: "",
+    content: "",
   },
 ]

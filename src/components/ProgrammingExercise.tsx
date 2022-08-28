@@ -6,7 +6,9 @@ import {
   Select,
   Snackbar,
   Button,
+  IconButton,
 } from "@material-ui/core"
+import { AddCircle } from "@material-ui/icons"
 import PyEditor from "./PyEditor"
 import AnimatedOutputBox, { AnimatedOutputBoxRef } from "./AnimatedOutputBox"
 import { v4 as uuid } from "uuid"
@@ -40,6 +42,7 @@ import { WebEditorExercise } from "../hooks/useExercise"
 import useCachedFileEntries from "../hooks/useCachedFileEntries"
 import { emptyFile, exampleFiles } from "../constants"
 import WithBrowserIncompatibilityOverlay from "./WithBrowserIncompatibilityOverlay"
+import { constants } from "fs"
 
 export interface ProgrammingExerciseProps {
   submitFeedback: (
@@ -111,6 +114,7 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
           msg: {
             code: code ?? files[activeFile].content,
             debug,
+            files,
           },
         })
       } else {
@@ -157,7 +161,9 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
       const { type, msg } = e.data
       switch (type) {
         case "print":
-          setOutput(output.concat({ id: uuid(), type: "output", text: msg }))
+          if (editorState === EditorState.ExecutingCode) {
+            setOutput(output.concat({ id: uuid(), type: "output", text: msg }))
+          }
           break
         case "input_required":
           setEditorState(EditorState.WaitingInput)
@@ -189,6 +195,7 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
           }
           break
         case "print_done":
+          console.log("done executing")
           setEditorState((previous) => {
             switch (previous) {
               case EditorState.Testing:
@@ -218,6 +225,8 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
         case "start_test":
           setEditorState(EditorState.Testing)
           break
+        case "update_files":
+          setFiles(JSON.parse(msg))
       }
     })
 
@@ -401,28 +410,47 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
           />
         )}
 
-        {files.length > 1 && (
-          <>
-            <InputLabel id="label">{t("selectFile")}</InputLabel>
-            <Select
-              labelId="label"
-              native
-              value={files[activeFile].shortName}
-              onChange={handleFileChange}
-              data-cy="select-file"
-            >
+        <InputLabel id="label">{t("selectFile")}</InputLabel>
+        <Select
+          labelId="label"
+          native
+          value={files[activeFile].shortName}
+          onChange={handleFileChange}
+          data-cy="select-file"
+        >
+          {
+            <>
+              {files.map(({ shortName }) => (
+                <option key={shortName} value={shortName}>
+                  {shortName}
+                </option>
+              ))}
+            </>
+          }
+        </Select>
+        <IconButton
+          onClick={() => {
+            const filename = window.prompt("Filename: ")
+            if (!filename) {
+              return
+            }
+
+            const newIdx = files.length
+
+            setFiles((files) => [
+              ...files,
               {
-                <>
-                  {files.map(({ shortName }) => (
-                    <option key={shortName} value={shortName}>
-                      {shortName}
-                    </option>
-                  ))}
-                </>
-              }
-            </Select>
-          </>
-        )}
+                fullName: filename,
+                shortName: filename,
+                originalContent: "",
+                content: "",
+              },
+            ])
+            setActiveFile(newIdx)
+          }}
+        >
+          <AddCircle />
+        </IconButton>
 
         {!exercise.ready && (
           <OverlayCenterWrapper>
@@ -446,7 +474,13 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
             <StyledButton
               onClick={() => handleRun()}
               className={classes.runButton}
-              disabled={!(workerAvailable && pyEditorButtonsDisabled)}
+              disabled={
+                !(
+                  workerAvailable &&
+                  pyEditorButtonsDisabled &&
+                  files[activeFile].fullName.endsWith(".py")
+                )
+              }
               data-cy="run-btn"
             >
               <FontAwesomeIcon icon={faPlay} />
@@ -462,15 +496,6 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
               <span className={classes.whiteText}>{t("stopButtonText")}</span>
             </StyledButton>
           )}
-          <StyledButton
-            onClick={() => handleTests()}
-            disabled={!pyEditorButtonsDisabled}
-            className={classes.testButton}
-            data-cy="test-btn"
-          >
-            <FontAwesomeIcon icon={faEye} />
-            <span style={{ paddingLeft: "5px" }}>{t("testButtonText")}</span>
-          </StyledButton>
           <AlertDialog resetExercise={handleReset} />
           {solutionUrl && (
             <StyledButton
