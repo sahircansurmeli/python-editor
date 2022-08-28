@@ -15,35 +15,20 @@ Install with `npm i react-python-editor`.
 The editor component can be used in a following way:
 
 ```jsx
-import { ProgrammingExercise } from "moocfi-python-editor"
+import { PythonEditor } from "react-python-editor"
 
 const App = () => {
   // ...
 
-  return (
-    <ProgrammingExercise
-      organization="organization-slug"
-      course="course-name"
-      exercise="exercise-name"
-      userId="user-id"
-      token="user-token"
-    />
-  )
+  return <ProgrammingExercise editorHeight="400px" outputHeight="200px" />
 }
 ```
-
-Required properties:
-
-- `organization`, `course` and `exercise` Define which TMC exercise will be loaded.
-- `userId` and `token` are used to identify the current user.
 
 Optional properties:
 
 - `debug` Show and log debug information if set to `true`.
-- `language` Editor's localization. Currently supports `en` (default) and `fi`.
-- `height` Height of the editor. Defaults to `400px`.
+- `editorHeight` Height of the editor. Defaults to `400px`.
 - `outputHeight` Maximum height of the output content in pixels.
-- `onExerciseDetailsChange` Callback function that provides details about the exercise. These details vary by user.
 
 ## Setting up the project
 
@@ -59,6 +44,8 @@ run `npm start`.
 If you make any changes to the worker, you will always need to run the `encode:worker` command again.
 
 ## License
+
+This project is forked from [https://github.com/rage/python-editor](url)
 
 This project is licensed under either of
 
