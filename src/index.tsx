@@ -5,13 +5,16 @@ import {
   ProgrammingExercise,
   ProgrammingExerciseProps,
 } from "./components/ProgrammingExercise"
+import { StylesProvider } from "@material-ui/styles"
 
 const PythonEditor: React.FunctionComponent<ProgrammingExerciseProps> = (
   props: ProgrammingExerciseProps,
 ) => (
-  <I18nextProvider i18n={i18n}>
-    <ProgrammingExercise {...props} />
-  </I18nextProvider>
+  <StylesProvider injectFirst>
+    <I18nextProvider i18n={i18n}>
+      <ProgrammingExercise {...props} />
+    </I18nextProvider>
+  </StylesProvider>
 )
 
 export { PythonEditor }

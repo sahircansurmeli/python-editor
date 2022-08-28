@@ -1,2 +1,2 @@
-import { ProgrammingExercise } from "./src"
-export { ProgrammingExercise }
+import { PythonEditor } from "./src"
+export { PythonEditor }
