@@ -1,17 +1,16 @@
 # Moocfi Python Editor
 
-[![NPM version](https://img.shields.io/npm/v/moocfi-python-editor.svg?style=flat-square)](https://www.npmjs.com/package/moocfi-python-editor)
-![Cypress End-2-End Tests](https://github.com/rage/python-editor/workflows/Cypress%20End-2-End%20Tests/badge.svg)
+[![NPM version](https://img.shields.io/npm/v/react-python-editor.svg?style=flat-square)](https://www.npmjs.com/package/react-python-editor)
 
-Moocfi Python Editor is a React component that provides an in-browser editing,
-running and testing environment for [TestMyCode](https://tmc.mooc.fi/) python
-courses. The editor is based on
+React Python Editor is a React component that provides an in-browser editing and
+running environment for Python
+code. The editor is based on
 [Pyodide python runtime environment](https://github.com/iodide-project/pyodide)
 that is run using webworkers.
 
 ## Usage
 
-Install with `npm install moocfi-python-editor`.
+Install with `npm i react-python-editor`.
 
 The editor component can be used in a following way:
 

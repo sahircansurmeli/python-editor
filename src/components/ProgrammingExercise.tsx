@@ -44,7 +44,7 @@ import { emptyFile, exampleFiles } from "../constants"
 import WithBrowserIncompatibilityOverlay from "./WithBrowserIncompatibilityOverlay"
 import { constants } from "fs"
 
-export interface ProgrammingExerciseProps {
+interface ProgrammingExerciseProps {
   submitFeedback: (
     testResults: TestResultObject,
     feedback: Array<FeedBackAnswer>,
@@ -567,4 +567,4 @@ ProgrammingExercise.defaultProps = {
   },
 }
 
-export { ProgrammingExercise }
+export { ProgrammingExercise, ProgrammingExerciseProps }
