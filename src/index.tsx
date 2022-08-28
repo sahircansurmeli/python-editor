@@ -14,4 +14,4 @@ const PythonEditor: React.FunctionComponent<ProgrammingExerciseProps> = (
   </I18nextProvider>
 )
 
-export { ProgrammingExercise }
+export { PythonEditor }
