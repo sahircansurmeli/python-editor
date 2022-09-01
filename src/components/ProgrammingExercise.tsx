@@ -75,7 +75,12 @@ const initialFiles = { value: [emptyFile], timestamp: -1 }
 const AddButton: React.FunctionComponent<
   React.HTMLAttributes<HTMLButtonElement>
 > = ({ className, onClick, children }) => (
-  <IconButton className={className} onClick={onClick} children={children} />
+  <IconButton
+    className={className}
+    onClick={onClick}
+    children={children}
+    title="New file"
+  />
 )
 
 const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
@@ -448,8 +453,6 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
             feedbackQuestions={testResults?.feedbackQuestions}
           />
         )}
-
-        <InputLabel id="label">{t("selectFile")}</InputLabel>
         <Tabs
           value={files[activeFile].shortName}
           onChange={handleFileChange}
