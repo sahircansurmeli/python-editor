@@ -5,6 +5,7 @@ self.importScripts("https://cdn.jsdelivr.net/pyodide/v0.21.1/full/pyodide.js")
 
 async function loadPyodideAndPackages() {
   self.globalThis.pyodide = await loadPyodide()
+  await pyodide.loadPackage(["micropip"])
 }
 let pyodideReadyPromise = loadPyodideAndPackages()
 
