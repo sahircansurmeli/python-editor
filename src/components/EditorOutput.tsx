@@ -71,11 +71,6 @@ const EditorOutput: React.FunctionComponent<EditorOutputProps> = ({
         color={waitingInput ? OutputColor.Orange : OutputColor.Gray}
       >
         {getStatus()}
-        <OutputButton
-          label={t("button.close")}
-          onClick={onClose}
-          dataCy="close-btn"
-        />
       </OutputHeader>
       <OutputBody>
         <ScrollBox maxHeight={outputHeight} ref={scrollBoxRef}>

@@ -7,6 +7,8 @@ import {
   Snackbar,
   Button,
   IconButton,
+  Tab,
+  Tabs,
 } from "@material-ui/core"
 import { AddCircle } from "@material-ui/icons"
 import PyEditor from "./PyEditor"
@@ -69,6 +71,12 @@ const StyledButton = styled((props) => (
 `
 
 const initialFiles = { value: [emptyFile], timestamp: -1 }
+
+const AddButton: React.FunctionComponent<
+  React.HTMLAttributes<HTMLButtonElement>
+> = ({ className, onClick, children }) => (
+  <IconButton className={className} onClick={onClick} children={children} />
+)
 
 const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
   ({
@@ -320,8 +328,39 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
       setOpenNotification(false)
     }
 
-    const handleFileChange = (e: any) => {
-      setActiveFile(files.findIndex((x) => x.shortName === e.target.value) ?? 0)
+    const handleAddFile = () => {
+      const filename = window.prompt("Filename: ")
+      if (!filename) {
+        return
+      }
+
+      if (files.map((f) => f.shortName).includes(filename)) {
+        window.alert(`${filename} already exists!`)
+        return
+      }
+
+      const newIdx = files.length
+
+      setFiles((files) => [
+        ...files,
+        {
+          fullName: filename,
+          shortName: filename,
+          originalContent: "",
+          content: "",
+        },
+      ])
+
+      setActiveFile(newIdx)
+    }
+
+    const handleFileChange = (e: any, value: any) => {
+      const idx =
+        typeof value === "number"
+          ? value
+          : files.findIndex((x) => x.shortName === value)
+      console.log(idx)
+      setActiveFile(idx)
     }
 
     const mapStateToOutput = () => {
@@ -411,47 +450,26 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
         )}
 
         <InputLabel id="label">{t("selectFile")}</InputLabel>
-        <Select
-          labelId="label"
-          native
+        <Tabs
           value={files[activeFile].shortName}
           onChange={handleFileChange}
+          variant="scrollable"
+          scrollButtons="on"
+          aria-label="label"
           data-cy="select-file"
         >
-          {
-            <>
-              {files.map(({ shortName }) => (
-                <option key={shortName} value={shortName}>
-                  {shortName}
-                </option>
-              ))}
-            </>
-          }
-        </Select>
-        <IconButton
-          onClick={() => {
-            const filename = window.prompt("Filename: ")
-            if (!filename) {
-              return
-            }
-
-            const newIdx = files.length
-
-            setFiles((files) => [
-              ...files,
-              {
-                fullName: filename,
-                shortName: filename,
-                originalContent: "",
-                content: "",
-              },
-            ])
-            setActiveFile(newIdx)
-          }}
-        >
-          <AddCircle />
-        </IconButton>
-
+          {files.map(({ shortName }) => (
+            <Tab
+              key={shortName}
+              value={shortName}
+              label={shortName}
+              style={{ textTransform: "none" }}
+            />
+          ))}
+          <AddButton onClick={handleAddFile}>
+            <AddCircle />
+          </AddButton>
+        </Tabs>
         {!exercise.ready && (
           <OverlayCenterWrapper>
             <CircularProgress thickness={5} color="inherit" />
