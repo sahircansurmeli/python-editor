@@ -36,7 +36,7 @@ import {
   faStop,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faEye } from "@fortawesome/free-regular-svg-icons"
+import { faCopy } from "@fortawesome/free-regular-svg-icons"
 import SubmittingOutput from "./SubmittingOutput"
 import useStyles from "../hooks/useStyles"
 import AlertDialog from "./AlertDialog"
@@ -62,6 +62,7 @@ interface ProgrammingExerciseProps {
   editorHeight?: string
   outputHeight?: string
   solutionUrl?: string
+  onCopy?: (content: string) => void
 }
 
 const StyledButton = styled((props) => (
@@ -99,6 +100,7 @@ const ProgrammingExercise = forwardRef<
       solutionUrl,
       editorHeight,
       outputHeight,
+      onCopy,
     },
     ref,
   ) => {
@@ -374,6 +376,10 @@ const ProgrammingExercise = forwardRef<
       setActiveFile(idx)
     }
 
+    const handleCopy = () => {
+      onCopy(files[activeFile].content)
+    }
+
     const mapStateToOutput = () => {
       switch (editorState) {
         case EditorState.ShowTestResults:
@@ -522,6 +528,18 @@ const ProgrammingExercise = forwardRef<
             >
               <FontAwesomeIcon icon={faStop} />
               <span className={classes.whiteText}>{t("stopButtonText")}</span>
+            </StyledButton>
+          )}
+          {onCopy && (
+            <StyledButton
+              onClick={handleCopy}
+              disabled={!pyEditorButtonsDisabled}
+              className={classes.testButton}
+              data-cy="test-btn"
+              title="Copy the code to your comment"
+            >
+              <FontAwesomeIcon icon={faCopy} />
+              <span style={{ paddingLeft: "5px" }}>Copy</span>
             </StyledButton>
           )}
           <AlertDialog resetExercise={handleReset} />

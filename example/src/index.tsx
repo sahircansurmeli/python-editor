@@ -24,9 +24,9 @@ const StyledButton = styled((props) => (
 const App = () => {
   const editorRef = useRef(null)
 
-  window.setInterval(() => {
+  const copy = (content) => {
     console.log(editorRef.current.getValue())
-  }, 1000)
+  }
 
   return (
     <I18nextProvider i18n={i18n}>
