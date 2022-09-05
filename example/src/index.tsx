@@ -1,4 +1,4 @@
-import React, { useState } from "../../node_modules/react"
+import React, { useRef } from "../../node_modules/react"
 import { ProgrammingExercise } from "../../src/components/ProgrammingExercise"
 import { Button, TextField, MenuItem, Grid } from "@material-ui/core"
 import { StylesProvider } from "@material-ui/styles"
@@ -22,15 +22,18 @@ const StyledButton = styled((props) => (
 `
 
 const App = () => {
-  const [value, setValue] = useState("")
+  const editorRef = useRef(null)
+
+  window.setInterval(() => {
+    console.log(editorRef.current.getValue())
+  }, 1000)
 
   return (
     <I18nextProvider i18n={i18n}>
       <ProgrammingExercise
         editorHeight="400px"
         outputHeight="200px"
-        value={value}
-        onChange={setValue}
+        ref={editorRef}
       />
     </I18nextProvider>
   )

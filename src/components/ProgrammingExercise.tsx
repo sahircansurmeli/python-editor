@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, forwardRef } from "react"
 import { useTranslation } from "react-i18next"
 import {
   CircularProgress,
@@ -44,7 +44,7 @@ import { WebEditorExercise } from "../hooks/useExercise"
 import useCachedFileEntries from "../hooks/useCachedFileEntries"
 import { emptyFile, exampleFiles } from "../constants"
 import WithBrowserIncompatibilityOverlay from "./WithBrowserIncompatibilityOverlay"
-import { constants } from "fs"
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
 
 interface ProgrammingExerciseProps {
   submitFeedback: (
@@ -83,19 +83,25 @@ const AddButton: React.FunctionComponent<
   />
 )
 
-const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
-  ({
-    submitFeedback,
-    submitProgrammingExercise,
-    submitToPaste,
-    cacheKey,
-    debug,
-    exercise,
-    submitDisabled,
-    solutionUrl,
-    editorHeight,
-    outputHeight,
-  }) => {
+const ProgrammingExercise = forwardRef<
+  monaco.editor.IStandaloneCodeEditor,
+  ProgrammingExerciseProps
+>(
+  (
+    {
+      submitFeedback,
+      submitProgrammingExercise,
+      submitToPaste,
+      cacheKey,
+      debug,
+      exercise,
+      submitDisabled,
+      solutionUrl,
+      editorHeight,
+      outputHeight,
+    },
+    ref,
+  ) => {
     const [t] = useTranslation()
     const [output, setOutput] = useState<OutputObject[]>([])
     const [testResults, setTestResults] = useState<
@@ -488,6 +494,7 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
               isReady ? EditorState.Idle : EditorState.Initializing,
             )
           }
+          ref={ref}
         />
 
         <div style={{ padding: "0.6em 0em" }}>
@@ -570,7 +577,8 @@ const ProgrammingExercise: React.FunctionComponent<ProgrammingExerciseProps> =
         />
       </WithBrowserIncompatibilityOverlay>
     )
-  }
+  },
+)
 
 ProgrammingExercise.defaultProps = {
   submitProgrammingExercise: () =>
