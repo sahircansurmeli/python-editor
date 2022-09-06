@@ -10,7 +10,7 @@ import {
   Tab,
   Tabs,
 } from "@material-ui/core"
-import { AddCircle } from "@material-ui/icons"
+import { AddCircle, Fullscreen, FullscreenExit } from "@material-ui/icons"
 import PyEditor from "./PyEditor"
 import AnimatedOutputBox, { AnimatedOutputBoxRef } from "./AnimatedOutputBox"
 import { v4 as uuid } from "uuid"
@@ -44,6 +44,7 @@ import { WebEditorExercise } from "../hooks/useExercise"
 import useCachedFileEntries from "../hooks/useCachedFileEntries"
 import { emptyFile, exampleFiles } from "../constants"
 import WithBrowserIncompatibilityOverlay from "./WithBrowserIncompatibilityOverlay"
+import { FullScreen, useFullScreenHandle } from "react-full-screen"
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
 
 interface ProgrammingExerciseProps {
@@ -62,7 +63,7 @@ interface ProgrammingExerciseProps {
   editorHeight?: string
   outputHeight?: string
   solutionUrl?: string
-  onCopy?: (content: string) => void
+  onCopy?: (file: FileEntry) => void
 }
 
 const StyledButton = styled((props) => (
@@ -123,6 +124,8 @@ const ProgrammingExercise = forwardRef<
     const outputBoxRef = React.createRef<AnimatedOutputBoxRef>()
     const [editorState, setEditorState] = useState(EditorState.Initializing)
     const classes = useStyles()
+    const handle = useFullScreenHandle()
+    const [fullScreen, setFullScreen] = useState(false)
 
     function handleRun(code?: string) {
       if (workerAvailable) {
@@ -377,7 +380,7 @@ const ProgrammingExercise = forwardRef<
     }
 
     const handleCopy = () => {
-      onCopy(files[activeFile].content)
+      onCopy(files[activeFile])
     }
 
     const mapStateToOutput = () => {
@@ -449,151 +452,156 @@ const ProgrammingExercise = forwardRef<
       (editorState & (EditorState.WorkerActive | EditorState.Submitting)) === 0
 
     return (
-      <WithBrowserIncompatibilityOverlay>
-        {editorState === EditorState.ShowPassedFeedbackForm && (
-          <FeedbackForm
-            awardedPoints={testResults?.points}
-            onSubmitFeedback={(feedback) => {
-              setEditorState(EditorState.ShowSubmissionResults)
-              if (testResults) {
-                submitFeedback(testResults, feedback)
-                feedback.length > 0 && setOpenNotification(true)
-              }
-            }}
-            onClose={() => setEditorState(EditorState.ShowSubmissionResults)}
-            solutionUrl={testResults?.solutionUrl}
-            feedbackQuestions={testResults?.feedbackQuestions}
-          />
-        )}
-        <Tabs
-          value={files[activeFile].shortName}
-          onChange={handleFileChange}
-          variant="scrollable"
-          scrollButtons="on"
-          aria-label="label"
-          data-cy="select-file"
-        >
-          {files.map(({ shortName }) => (
-            <Tab
-              key={shortName}
-              value={shortName}
-              label={shortName}
-              style={{ textTransform: "none" }}
-            />
-          ))}
-          <AddButton onClick={handleAddFile}>
-            <AddCircle />
-          </AddButton>
-        </Tabs>
-        {!exercise.ready && (
-          <OverlayCenterWrapper>
-            <CircularProgress thickness={5} color="inherit" />
-          </OverlayCenterWrapper>
-        )}
-
-        <PyEditor
-          editorValue={files[activeFile].content}
-          setEditorValue={handleEditorValueChange}
-          editorHeight={editorHeight}
-          setIsEditorReady={(isReady) =>
-            setEditorState(
-              isReady ? EditorState.Idle : EditorState.Initializing,
-            )
-          }
-          ref={ref}
-        />
-
-        <div style={{ padding: "0.6em 0em" }}>
-          {(editorState & EditorState.WorkerActive) === 0 ? (
-            <StyledButton
-              onClick={() => handleRun()}
-              className={classes.runButton}
-              disabled={
-                !(
-                  workerAvailable &&
-                  pyEditorButtonsDisabled &&
-                  files[activeFile].fullName.endsWith(".py")
-                )
-              }
-              data-cy="run-btn"
-            >
-              <FontAwesomeIcon icon={faPlay} />
-              <span className={classes.whiteText}>{t("runButtonText")}</span>
-            </StyledButton>
-          ) : (
-            <StyledButton
-              className={classes.stopButton}
-              onClick={() => stopWorker()}
-              data-cy="stop-btn"
-            >
-              <FontAwesomeIcon icon={faStop} />
-              <span className={classes.whiteText}>{t("stopButtonText")}</span>
-            </StyledButton>
-          )}
-          {onCopy && (
-            <StyledButton
-              onClick={handleCopy}
-              disabled={!pyEditorButtonsDisabled}
-              className={classes.testButton}
-              data-cy="test-btn"
-              title="Copy the code to your comment"
-            >
-              <FontAwesomeIcon icon={faCopy} />
-              <span style={{ paddingLeft: "5px" }}>Copy</span>
-            </StyledButton>
-          )}
-          <AlertDialog resetExercise={handleReset} />
-          {solutionUrl && (
-            <StyledButton
-              className={classes.normalButton}
-              onClick={() => window.open(solutionUrl, "_blank")}
-            >
-              {t("modelSolution")}
-            </StyledButton>
-          )}
-          {exercise.templateIssues.length > 0 && (
-            <StyledButton
-              onClick={() => {
-                setEditorState(EditorState.ShowProblems)
-                outputBoxRef.current?.open()
+      <FullScreen handle={handle} onChange={setFullScreen}>
+        <WithBrowserIncompatibilityOverlay>
+          {editorState === EditorState.ShowPassedFeedbackForm && (
+            <FeedbackForm
+              awardedPoints={testResults?.points}
+              onSubmitFeedback={(feedback) => {
+                setEditorState(EditorState.ShowSubmissionResults)
+                if (testResults) {
+                  submitFeedback(testResults, feedback)
+                  feedback.length > 0 && setOpenNotification(true)
+                }
               }}
-              disabled={(editorState & EditorState.WorkerActive) > 0}
-              className={classes.problemsButton}
-              data-cy="problems-btn"
-            >
-              <FontAwesomeIcon icon={faExclamationCircle} />
-              <span className={classes.whiteText}>{`${t("problemsTitle")} (${
-                exercise.templateIssues.length
-              })`}</span>
-            </StyledButton>
+              onClose={() => setEditorState(EditorState.ShowSubmissionResults)}
+              solutionUrl={testResults?.solutionUrl}
+              feedbackQuestions={testResults?.feedbackQuestions}
+            />
           )}
-        </div>
+          <Tabs
+            value={files[activeFile].shortName}
+            onChange={handleFileChange}
+            variant="scrollable"
+            scrollButtons="on"
+            aria-label="label"
+            data-cy="select-file"
+          >
+            {files.map(({ shortName }) => (
+              <Tab
+                key={shortName}
+                value={shortName}
+                label={shortName}
+                style={{ textTransform: "none" }}
+              />
+            ))}
+            <AddButton onClick={handleAddFile}>
+              <AddCircle />
+            </AddButton>
+          </Tabs>
+          {!exercise.ready && (
+            <OverlayCenterWrapper>
+              <CircularProgress thickness={5} color="inherit" />
+            </OverlayCenterWrapper>
+          )}
 
-        <AnimatedOutputBox
-          isRunning={(editorState & EditorState.WorkerActive) > 0}
-          outputHeight={outputHeight}
-          ref={outputBoxRef}
-        >
-          {mapStateToOutput()}
-        </AnimatedOutputBox>
+          <PyEditor
+            editorValue={files[activeFile].content}
+            setEditorValue={handleEditorValueChange}
+            editorHeight={editorHeight}
+            setIsEditorReady={(isReady) =>
+              setEditorState(
+                isReady ? EditorState.Idle : EditorState.Initializing,
+              )
+            }
+            ref={ref}
+          />
 
-        {debug && (
-          <div>
-            <div>EditorState: {EditorState[editorState]}</div>
-            <div>Cache key: {cacheKey || "undefined"}</div>
-            <div>Active file: {files[activeFile].fullName}</div>
+          <div style={{ padding: "0.6em 0em" }}>
+            {(editorState & EditorState.WorkerActive) === 0 ? (
+              <StyledButton
+                onClick={() => handleRun()}
+                className={classes.runButton}
+                disabled={
+                  !(
+                    workerAvailable &&
+                    pyEditorButtonsDisabled &&
+                    files[activeFile].fullName.endsWith(".py")
+                  )
+                }
+                data-cy="run-btn"
+              >
+                <FontAwesomeIcon icon={faPlay} />
+                <span className={classes.whiteText}>{t("runButtonText")}</span>
+              </StyledButton>
+            ) : (
+              <StyledButton
+                className={classes.stopButton}
+                onClick={() => stopWorker()}
+                data-cy="stop-btn"
+              >
+                <FontAwesomeIcon icon={faStop} />
+                <span className={classes.whiteText}>{t("stopButtonText")}</span>
+              </StyledButton>
+            )}
+            {onCopy && (
+              <StyledButton
+                onClick={handleCopy}
+                disabled={!pyEditorButtonsDisabled}
+                className={classes.testButton}
+                data-cy="test-btn"
+                title="Copy the code to your comment"
+              >
+                <FontAwesomeIcon icon={faCopy} />
+                <span style={{ paddingLeft: "5px" }}>Copy</span>
+              </StyledButton>
+            )}
+            <AlertDialog resetExercise={handleReset} />
+            {solutionUrl && (
+              <StyledButton
+                className={classes.normalButton}
+                onClick={() => window.open(solutionUrl, "_blank")}
+              >
+                {t("modelSolution")}
+              </StyledButton>
+            )}
+            <IconButton style={{ float: "right" }} onClick={handle.enter}>
+              {fullScreen ? <FullscreenExit /> : <Fullscreen />}
+            </IconButton>
+            {exercise.templateIssues.length > 0 && (
+              <StyledButton
+                onClick={() => {
+                  setEditorState(EditorState.ShowProblems)
+                  outputBoxRef.current?.open()
+                }}
+                disabled={(editorState & EditorState.WorkerActive) > 0}
+                className={classes.problemsButton}
+                data-cy="problems-btn"
+              >
+                <FontAwesomeIcon icon={faExclamationCircle} />
+                <span className={classes.whiteText}>{`${t("problemsTitle")} (${
+                  exercise.templateIssues.length
+                })`}</span>
+              </StyledButton>
+            )}
           </div>
-        )}
 
-        <Snackbar
-          open={openNotification}
-          autoHideDuration={5000}
-          onClose={handleCloseNotification}
-          message={t("thankYouForFeedback")}
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          key="bottom-center"
-        />
-      </WithBrowserIncompatibilityOverlay>
+          <AnimatedOutputBox
+            isRunning={(editorState & EditorState.WorkerActive) > 0}
+            outputHeight={outputHeight}
+            ref={outputBoxRef}
+          >
+            {mapStateToOutput()}
+          </AnimatedOutputBox>
+
+          {debug && (
+            <div>
+              <div>EditorState: {EditorState[editorState]}</div>
+              <div>Cache key: {cacheKey || "undefined"}</div>
+              <div>Active file: {files[activeFile].fullName}</div>
+            </div>
+          )}
+
+          <Snackbar
+            open={openNotification}
+            autoHideDuration={5000}
+            onClose={handleCloseNotification}
+            message={t("thankYouForFeedback")}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            key="bottom-center"
+          />
+        </WithBrowserIncompatibilityOverlay>
+      </FullScreen>
     )
   },
 )

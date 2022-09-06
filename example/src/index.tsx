@@ -24,16 +24,17 @@ const StyledButton = styled((props) => (
 const App = () => {
   const editorRef = useRef(null)
 
-  const copy = (content) => {
-    console.log(editorRef.current.getValue())
+  const copy = (file) => {
+    console.log(file.shortName)
   }
 
   return (
     <I18nextProvider i18n={i18n}>
       <ProgrammingExercise
-        editorHeight="400px"
+        editorHeight="55%"
         outputHeight="200px"
         ref={editorRef}
+        onCopy={copy}
       />
     </I18nextProvider>
   )
