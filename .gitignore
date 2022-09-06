@@ -8,5 +8,6 @@ DevProfile
 **/cypress/screenshots
 **/constants/*JsSource.ts
 .cache
+.parcel-cache
 debug.log
 **/pyodide/

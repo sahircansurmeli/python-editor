@@ -1,2 +1,3 @@
-import { PythonEditor } from "./src"
-export { PythonEditor }
+import PythonEditor from "./src"
+
+export default PythonEditor

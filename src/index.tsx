@@ -5,16 +5,38 @@ import {
   ProgrammingExercise,
   ProgrammingExerciseProps,
 } from "./components/ProgrammingExercise"
-import { StylesProvider } from "@material-ui/styles"
+import { StylesProvider, ThemeProvider } from "@material-ui/styles"
+import { createTheme } from "@material-ui/core/styles"
+import CssBaseline from "@material-ui/core/CssBaseline"
 
-const PythonEditor: React.FunctionComponent<ProgrammingExerciseProps> = (
-  props: ProgrammingExerciseProps,
-) => (
-  <StylesProvider injectFirst>
-    <I18nextProvider i18n={i18n}>
-      <ProgrammingExercise {...props} />
-    </I18nextProvider>
-  </StylesProvider>
-)
+const darkTheme = {
+  palette: {
+    type: "dark",
+  },
+}
 
-export { PythonEditor }
+const lightTheme = {
+  palette: {
+    type: "light",
+  },
+}
+
+const PythonEditor: React.FunctionComponent<ProgrammingExerciseProps> = ({
+  dark,
+  ...props
+}: ProgrammingExerciseProps) => {
+  return (
+    <ThemeProvider
+      theme={dark ? createTheme(darkTheme) : createTheme(lightTheme)}
+    >
+      <StylesProvider injectFirst>
+        <CssBaseline />
+        <I18nextProvider i18n={i18n}>
+          <ProgrammingExercise {...props} dark={dark} />
+        </I18nextProvider>
+      </StylesProvider>
+    </ThemeProvider>
+  )
+}
+
+export default PythonEditor

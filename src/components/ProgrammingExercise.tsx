@@ -11,6 +11,7 @@ import {
   Tabs,
 } from "@material-ui/core"
 import { AddCircle, Fullscreen, FullscreenExit } from "@material-ui/icons"
+import { useTheme } from "@material-ui/core/styles"
 import PyEditor from "./PyEditor"
 import AnimatedOutputBox, { AnimatedOutputBoxRef } from "./AnimatedOutputBox"
 import { v4 as uuid } from "uuid"
@@ -64,6 +65,7 @@ interface ProgrammingExerciseProps {
   outputHeight?: string
   solutionUrl?: string
   onCopy?: (file: FileEntry) => void
+  dark: boolean
 }
 
 const StyledButton = styled((props) => (
@@ -102,6 +104,7 @@ const ProgrammingExercise = forwardRef<
       editorHeight,
       outputHeight,
       onCopy,
+      dark,
     },
     ref,
   ) => {
@@ -126,6 +129,7 @@ const ProgrammingExercise = forwardRef<
     const classes = useStyles()
     const handle = useFullScreenHandle()
     const [fullScreen, setFullScreen] = useState(false)
+    const theme = useTheme()
 
     function handleRun(code?: string) {
       if (workerAvailable) {
@@ -452,7 +456,11 @@ const ProgrammingExercise = forwardRef<
       (editorState & (EditorState.WorkerActive | EditorState.Submitting)) === 0
 
     return (
-      <FullScreen handle={handle} onChange={setFullScreen}>
+      <FullScreen
+        handle={handle}
+        onChange={setFullScreen}
+        style={{ "background-color": "red" }}
+      >
         <WithBrowserIncompatibilityOverlay>
           {editorState === EditorState.ShowPassedFeedbackForm && (
             <FeedbackForm
@@ -504,6 +512,7 @@ const ProgrammingExercise = forwardRef<
                 isReady ? EditorState.Idle : EditorState.Initializing,
               )
             }
+            dark={dark}
             ref={ref}
           />
 
@@ -620,6 +629,7 @@ ProgrammingExercise.defaultProps = {
       console.log("Called for exercise details update."),
     getTestProgram: () => 'print("Default test called.")',
   },
+  dark: false,
 }
 
 export { ProgrammingExercise, ProgrammingExerciseProps }

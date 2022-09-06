@@ -20,10 +20,14 @@ type PyEditorProps = {
   editorHeight: string | undefined
   setEditorValue(editorValue: string): void
   setIsEditorReady(isReady: boolean): void
+  dark: boolean
 }
 
 const PyEditor = forwardRef<monaco.editor.IStandaloneCodeEditor, PyEditorProps>(
-  ({ editorValue, setEditorValue, editorHeight, setIsEditorReady }, ref) => {
+  (
+    { editorValue, setEditorValue, editorHeight, setIsEditorReady, dark },
+    ref,
+  ) => {
     const handleEditorDidMount: OnMount = (editor) => {
       if (ref && typeof ref !== "function") {
         ref.current = editor
@@ -51,6 +55,7 @@ const PyEditor = forwardRef<monaco.editor.IStandaloneCodeEditor, PyEditorProps>(
             hideCursorInOverviewRuler: true,
             scrollbar: { alwaysConsumeMouseWheel: false },
           }}
+          theme={dark ? "vs-dark" : "light"}
         />
       </EditorWrapper>
     )
