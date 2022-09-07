@@ -8,16 +8,17 @@ import {
 import { StylesProvider, ThemeProvider } from "@material-ui/styles"
 import { createTheme } from "@material-ui/core/styles"
 import CssBaseline from "@material-ui/core/CssBaseline"
+import { PaletteType } from "@material-ui/core"
 
 const darkTheme = {
   palette: {
-    type: "dark",
+    type: "dark" as PaletteType,
   },
 }
 
 const lightTheme = {
   palette: {
-    type: "light",
+    type: "light" as PaletteType,
   },
 }
 
