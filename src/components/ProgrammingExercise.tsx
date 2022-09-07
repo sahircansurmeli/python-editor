@@ -74,6 +74,10 @@ const StyledButton = styled((props) => (
   margin: 0.5em;
 `
 
+const StyledFullScreen = styled((props) => <FullScreen {...props} />)`
+  background-color: ${(props) => props.bgcolor};
+`
+
 const initialFiles = { value: [emptyFile], timestamp: -1 }
 
 const AddButton: React.FunctionComponent<
@@ -456,10 +460,10 @@ const ProgrammingExercise = forwardRef<
       (editorState & (EditorState.WorkerActive | EditorState.Submitting)) === 0
 
     return (
-      <FullScreen
+      <StyledFullScreen
         handle={handle}
         onChange={setFullScreen}
-        style={{ "background-color": "red" }}
+        bgcolor={theme.palette.background.default}
       >
         <WithBrowserIncompatibilityOverlay>
           {editorState === EditorState.ShowPassedFeedbackForm && (
@@ -564,7 +568,10 @@ const ProgrammingExercise = forwardRef<
                 {t("modelSolution")}
               </StyledButton>
             )}
-            <IconButton style={{ float: "right" }} onClick={handle.enter}>
+            <IconButton
+              style={{ float: "right" }}
+              onClick={fullScreen ? handle.exit : handle.enter}
+            >
               {fullScreen ? <FullscreenExit /> : <Fullscreen />}
             </IconButton>
             {exercise.templateIssues.length > 0 && (
@@ -610,7 +617,7 @@ const ProgrammingExercise = forwardRef<
             key="bottom-center"
           />
         </WithBrowserIncompatibilityOverlay>
-      </FullScreen>
+      </StyledFullScreen>
     )
   },
 )
