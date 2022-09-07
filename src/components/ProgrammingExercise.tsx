@@ -2,8 +2,6 @@ import React, { useState, useEffect, forwardRef } from "react"
 import { useTranslation } from "react-i18next"
 import {
   CircularProgress,
-  InputLabel,
-  Select,
   Snackbar,
   Button,
   IconButton,
@@ -65,7 +63,7 @@ interface ProgrammingExerciseProps {
   outputHeight?: string
   solutionUrl?: string
   onCopy?: (file: FileEntry) => void
-  dark: boolean
+  dark?: boolean
 }
 
 const StyledButton = styled((props) => (
@@ -388,7 +386,9 @@ const ProgrammingExercise = forwardRef<
     }
 
     const handleCopy = () => {
-      onCopy(files[activeFile])
+      if (onCopy) {
+        onCopy(files[activeFile])
+      }
     }
 
     const mapStateToOutput = () => {
@@ -516,7 +516,6 @@ const ProgrammingExercise = forwardRef<
                 isReady ? EditorState.Idle : EditorState.Initializing,
               )
             }
-            dark={dark}
             ref={ref}
           />
 
