@@ -10,7 +10,6 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "strict": true,
     "removeComments": true,
     "resolveJsonModule": true,
     "declaration": false,
