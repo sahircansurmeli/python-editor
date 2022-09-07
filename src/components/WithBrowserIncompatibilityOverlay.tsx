@@ -5,6 +5,12 @@ import styled from "styled-components"
 import { useTranslation } from "react-i18next"
 import { OverlayBox } from "./Overlay"
 
+declare global {
+  interface Window {
+    StyleMedia: any // 👈️ turn off type checking
+  }
+}
+
 const StyledOutput = styled(Grid)`
   padding: 5px;
   display: table-cell;
