@@ -133,6 +133,14 @@ from js import exit, printError
 if (os.getcwd() != "/home"):
   os.chdir("/home")
 
+fileNames = [${files.map((file) => `"${file.fullName}"`)}]
+
+for fname in os.listdir():
+    if fname == "web_user" or fname == "pyodide":
+        continue
+    if fname not in fileNames:
+        os.remove(fname)
+
 ${files
   .map(
     (file) =>
