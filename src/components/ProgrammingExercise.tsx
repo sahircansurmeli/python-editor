@@ -394,8 +394,10 @@ const ProgrammingExercise = forwardRef<
     }
 
     const handleCloseFile = (name: any) => {
-      setActiveFile(0)
-      setFiles((files) => files.filter((x) => x.shortName !== name))
+      if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+        setActiveFile(0)
+        setFiles((files) => files.filter((x) => x.shortName !== name))
+      }
     }
 
     const handleFileChange = (e: any, value: any) => {
