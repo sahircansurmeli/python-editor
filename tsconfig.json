@@ -9,6 +9,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": true,
+    "strict": true,
     "strictNullChecks": true,
     "removeComments": true,
     "resolveJsonModule": true,

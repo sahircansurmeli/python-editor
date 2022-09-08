@@ -45,33 +45,7 @@ export const exampleFiles: ReadonlyArray<FileEntry> = [
   {
     fullName: "main.py",
     shortName: "main.py",
-    originalContent: `import micropip
-
-# to install other libraries, simply copy the next line and replace numpy with the name of the library you want to install
-await micropip.install("numpy")
-    
-# set up your imports here, below the libraries installation steps
-import numpy as np
-
-# these are included in the Python standard library, and do not need an installation step:
-import json  
-from sys import version
-    
-# at this point, you can run any standard Python code and the code from the libraries you have installed
-print("Hello World")`,
-    content: `import micropip
-
-# to install other libraries, simply copy the next line and replace numpy with the name of the library you want to install
-await micropip.install("numpy")
-    
-# set up your imports here, below the libraries installation steps
-import numpy as np
-
-# these are included in the Python standard library, and do not need an installation step:
-import json  
-from sys import version
-    
-# at this point, you can run any standard Python code and the code from the libraries you have installed
-print("Hello World")`,
+    originalContent: "",
+    content: "",
   },
 ]

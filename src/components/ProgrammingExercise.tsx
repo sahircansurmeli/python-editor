@@ -65,6 +65,7 @@ interface ProgrammingExerciseProps {
   onCopy?: (file: FileEntry) => void
   dark: boolean
   onFullScreen: (fullscreen: boolean) => void
+  projectFiles?: ReadonlyArray<FileEntry>
 }
 
 const StyledButton = styled((props) => (
@@ -108,9 +109,14 @@ const ProgrammingExercise = forwardRef<
       outputHeight,
       onCopy,
       onFullScreen,
+      projectFiles,
     },
     ref,
   ) => {
+    if (projectFiles) {
+      exercise.projectFiles = projectFiles
+    }
+
     const [t] = useTranslation()
     const [output, setOutput] = useState<OutputObject[]>([])
     const [testResults, setTestResults] = useState<
@@ -147,24 +153,6 @@ const ProgrammingExercise = forwardRef<
             debug,
             files,
           },
-        })
-      } else {
-        console.log("Worker is busy")
-      }
-    }
-
-    function handleTests(code?: string) {
-      if (workerAvailable) {
-        const testCode = exercise.getTestProgram(
-          code ?? files[activeFile].content,
-        )
-        setOutput([])
-        setTestResults(undefined)
-        setWorkerAvailable(false)
-        setEditorState(EditorState.WorkerInitializing)
-        worker.postMessage({
-          type: "run_tests",
-          msg: { code: testCode, debug },
         })
       } else {
         console.log("Worker is busy")
