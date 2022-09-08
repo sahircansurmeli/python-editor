@@ -8,7 +8,12 @@ import {
   Tab,
   Tabs,
 } from "@material-ui/core"
-import { AddCircle, Fullscreen, FullscreenExit } from "@material-ui/icons"
+import {
+  AddCircle,
+  Fullscreen,
+  FullscreenExit,
+  Close,
+} from "@material-ui/icons"
 import { useTheme } from "@material-ui/core/styles"
 import PyEditor from "./PyEditor"
 import AnimatedOutputBox, { AnimatedOutputBoxRef } from "./AnimatedOutputBox"
@@ -45,6 +50,7 @@ import { emptyFile, exampleFiles } from "../constants"
 import WithBrowserIncompatibilityOverlay from "./WithBrowserIncompatibilityOverlay"
 import { FullScreen, useFullScreenHandle } from "react-full-screen"
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
+import "./ProgrammingExercise.css"
 
 interface ProgrammingExerciseProps {
   submitFeedback: (
@@ -77,6 +83,27 @@ const StyledButton = styled((props) => (
 
 const StyledFullScreen = styled((props) => <FullScreen {...props} />)`
   background-color: ${(props) => props.bgcolor};
+`
+
+const StyledTab = styled(({ shortName, handleCloseFile, inExerciseFiles }) => (
+  <span>
+    {shortName}
+    {inExerciseFiles || (
+      <IconButton
+        onClick={(e) => {
+          e.stopPropagation()
+          handleCloseFile(shortName)
+        }}
+        size="small"
+        style={{ float: "right" }}
+      >
+        <Close />
+      </IconButton>
+    )}
+  </span>
+))`
+  display: inline;
+  width: 100%;
 `
 
 const initialFiles = { value: [emptyFile], timestamp: -1 }
@@ -366,11 +393,17 @@ const ProgrammingExercise = forwardRef<
       setActiveFile(newIdx)
     }
 
+    const handleCloseFile = (name: any) => {
+      setActiveFile(0)
+      setFiles((files) => files.filter((x) => x.shortName !== name))
+    }
+
     const handleFileChange = (e: any, value: any) => {
+      console.log("file chanage", e)
       const idx =
         typeof value === "number"
           ? value
-          : files.findIndex((x) => x.shortName === value)
+          : files.findIndex((x) => x && x.shortName === value)
       console.log(idx)
       setActiveFile(idx)
     }
@@ -488,8 +521,16 @@ const ProgrammingExercise = forwardRef<
               <Tab
                 key={shortName}
                 value={shortName}
-                label={shortName}
-                style={{ textTransform: "none" }}
+                label={
+                  <StyledTab
+                    shortName={shortName}
+                    handleCloseFile={handleCloseFile}
+                    inExerciseFiles={exercise.projectFiles
+                      .map((x) => x.shortName)
+                      .includes(shortName)}
+                  />
+                }
+                style={{ textTransform: "none", paddingRight: 0 }}
               />
             ))}
             <AddButton onClick={handleAddFile}>

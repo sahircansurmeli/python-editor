@@ -33,10 +33,8 @@ export default function App() {
     <PythonEditor
       editorHeight="55%"
       outputHeight="200px"
-      dark
       onFullScreen={(fs) => console.log("Full screen: " + fs)}
       projectFiles={projectFiles}
-      backgroundColor="red"
     />
   )
 }
