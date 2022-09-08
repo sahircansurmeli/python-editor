@@ -41,3 +41,4 @@ const PythonEditor: React.FunctionComponent<ProgrammingExerciseProps> = ({
 }
 
 export default PythonEditor
+export { ProgrammingExerciseProps }
