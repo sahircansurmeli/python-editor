@@ -63,7 +63,8 @@ interface ProgrammingExerciseProps {
   outputHeight?: string
   solutionUrl?: string
   onCopy?: (file: FileEntry) => void
-  dark?: boolean
+  dark: boolean
+  onFullScreen: (fullscreen: boolean) => void
 }
 
 const StyledButton = styled((props) => (
@@ -106,7 +107,7 @@ const ProgrammingExercise = forwardRef<
       editorHeight,
       outputHeight,
       onCopy,
-      dark,
+      onFullScreen,
     },
     ref,
   ) => {
@@ -456,13 +457,18 @@ const ProgrammingExercise = forwardRef<
       )
     }
 
+    const handleFullScreenChange = (fullscreen: boolean) => {
+      setFullScreen(fullscreen)
+      onFullScreen(fullscreen)
+    }
+
     const pyEditorButtonsDisabled =
       (editorState & (EditorState.WorkerActive | EditorState.Submitting)) === 0
 
     return (
       <StyledFullScreen
         handle={handle}
-        onChange={setFullScreen}
+        onChange={handleFullScreenChange}
         bgcolor={theme.palette.background.default}
       >
         <WithBrowserIncompatibilityOverlay>
@@ -636,6 +642,7 @@ ProgrammingExercise.defaultProps = {
     getTestProgram: () => 'print("Default test called.")',
   },
   dark: false,
+  onFullScreen: () => void 0,
 }
 
 export { ProgrammingExercise, ProgrammingExerciseProps }
