@@ -10,30 +10,33 @@ import { createTheme } from "@material-ui/core/styles"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import { PaletteType } from "@material-ui/core"
 
-const darkTheme = {
-  palette: {
-    type: "dark" as PaletteType,
-  },
-}
-
-const lightTheme = {
-  palette: {
-    type: "light" as PaletteType,
-  },
-}
-
 const PythonEditor: React.FunctionComponent<ProgrammingExerciseProps> = ({
   dark,
+  backgroundColor,
   ...props
 }: ProgrammingExerciseProps) => {
   return (
     <ThemeProvider
-      theme={dark ? createTheme(darkTheme) : createTheme(lightTheme)}
+      theme={createTheme({
+        palette: {
+          type: dark ? "dark" : ("light" as PaletteType),
+          ...(backgroundColor && {
+            background: {
+              default: backgroundColor,
+              paper: backgroundColor,
+            },
+          }),
+        },
+      })}
     >
       <StylesProvider injectFirst>
         <CssBaseline />
         <I18nextProvider i18n={i18n}>
-          <ProgrammingExercise {...props} dark={dark} />
+          <ProgrammingExercise
+            {...props}
+            dark={dark}
+            backgroundColor={backgroundColor}
+          />
         </I18nextProvider>
       </StylesProvider>
     </ThemeProvider>

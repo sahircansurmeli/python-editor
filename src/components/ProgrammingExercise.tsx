@@ -66,6 +66,7 @@ interface ProgrammingExerciseProps {
   dark: boolean
   onFullScreen: (fullscreen: boolean) => void
   projectFiles?: ReadonlyArray<FileEntry>
+  backgroundColor?: string
 }
 
 const StyledButton = styled((props) => (

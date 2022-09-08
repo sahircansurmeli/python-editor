@@ -36,6 +36,7 @@ export default function App() {
       dark
       onFullScreen={(fs) => console.log("Full screen: " + fs)}
       projectFiles={projectFiles}
+      backgroundColor="red"
     />
   )
 }
