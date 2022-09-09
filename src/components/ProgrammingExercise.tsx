@@ -400,12 +400,10 @@ const ProgrammingExercise = forwardRef<
     }
 
     const handleFileChange = (e: any, value: any) => {
-      console.log("file chanage", e)
       const idx =
         typeof value === "number"
           ? value
           : files.findIndex((x) => x && x.shortName === value)
-      console.log(idx)
       setActiveFile(idx)
     }
 
@@ -538,7 +536,11 @@ const ProgrammingExercise = forwardRef<
                       .includes(shortName)}
                   />
                 }
-                style={{ textTransform: "none", paddingRight: 0 }}
+                style={{
+                  textTransform: "none",
+                  paddingRight: 0,
+                  color: theme.palette.text.primary,
+                }}
               />
             ))}
             <AddButton onClick={handleAddFile}>

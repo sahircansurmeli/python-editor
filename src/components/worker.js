@@ -78,7 +78,6 @@ let prevDate = null
  * `from js import print` and `__builtins__.print = print` to use.
  */
 self.print = function (...args) {
-  console.log("PRINT FUNCTION SELF.PRINT")
   let kwargs = {}
   if (typeof args[args.length - 1] === "object") {
     kwargs = args.pop()
@@ -92,7 +91,6 @@ self.print = function (...args) {
     type: "print",
     msg: text,
   })
-  console.log(text)
 }
 
 self.printError = function (message, kind, line, tb) {
