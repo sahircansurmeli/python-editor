@@ -50,7 +50,6 @@ import { emptyFile, exampleFiles } from "../constants"
 import WithBrowserIncompatibilityOverlay from "./WithBrowserIncompatibilityOverlay"
 import { FullScreen, useFullScreenHandle } from "react-full-screen"
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api"
-import "./ProgrammingExercise.css"
 
 interface ProgrammingExerciseProps {
   submitFeedback: (
@@ -511,6 +510,13 @@ const ProgrammingExercise = forwardRef<
               feedbackQuestions={testResults?.feedbackQuestions}
             />
           )}
+          <style>
+            {`
+              .MuiTab-wrapper {
+                display: inline !important;
+              }
+            `}
+          </style>
           <Tabs
             value={files[activeFile].shortName}
             onChange={handleFileChange}
