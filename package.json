@@ -1,6 +1,6 @@
 {
   "name": "react-python-editor",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "A Python editor and interpreter with interactive console",
   "main": "dist/src/index.js",
   "scripts": {
